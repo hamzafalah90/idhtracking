@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDH Tracking</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-2xl font-bold mb-6">IDH and Antihypertensive Tracking</h1>
+            
+            <form id="trackingForm" class="space-y-6">
+                <!-- Basic Info -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Date</label>
+                        <input type="date" id="date" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Patient ID</label>
+                        <input type="text" id="patientId" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <!-- IDH and Morning Meds -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Had IDH?</label>
+                        <div class="mt-1">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="hadIDH" value="yes" required class="text-blue-600">
+                                <span class="ml-2">Yes</span>
+                            </label>
+                            <label class="inline-flex items-center ml-6">
+                                <input type="radio" name="hadIDH" value="no" required class="text-blue-600">
+                                <span class="ml-2">No</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Morning Medications Taken?</label>
+                        <div class="mt-1">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="morningMeds" value="yes" required class="text-blue-600">
+                                <span class="ml-2">Yes</span>
+                            </label>
+                            <label class="inline-flex items-center ml-6">
+                                <input type="radio" name="morningMeds" value="no" required class="text-blue-600">
+                                <span class="ml-2">No</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medications -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Medications</label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="medications" value="aceI" class="text-blue-600">
+                            <span class="ml-2">ACE-I</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="medications" value="arb" class="text-blue-600">
+                            <span class="ml-2">ARB</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="medications" value="ccb" class="text-blue-600">
+                            <span class="ml-2">CCB</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="medications" value="bb" class="text-blue-600">
+                            <span class="ml-2">Beta Blocker</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="medications" value="central" class="text-blue-600">
+                            <span class="ml-2">Central Acting</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="medications" value="diuretic" class="text-blue-600">
+                            <span class="ml-2">Diuretic</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Notes</label>
+                    <textarea id="notes" rows="3" 
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                </div>
+
+                <div class="flex justify-end space-x-4">
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Save Entry
+                    </button>
+                    <button type="button" id="exportButton"
+                        class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                        Export Data
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Data Table -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-bold mb-4">Recent Entries</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patient ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IDH</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Morning Meds</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Medications</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTableBody" class="bg-white divide-y divide-gray-200">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let entries = JSON.parse(localStorage.getItem('idhEntries') || '[]');
+
+        function saveEntry(e) {
+            e.preventDefault();
+
+            const medicationCheckboxes = document.querySelectorAll('input[name="medications"]:checked');
+            const medications = Array.from(medicationCheckboxes).map(cb => cb.value);
+
+            const entry = {
+                id: Date.now(),
+                date: document.getElementById('date').value,
+                patientId: document.getElementById('patientId').value,
+                hadIDH: document.querySelector('input[name="hadIDH"]:checked').value === 'yes',
+                morningMeds: document.querySelector('input[name="morningMeds"]:checked').value === 'yes',
+                medications: medications,
+                notes: document.getElementById('notes').value
+            };
+
+            entries.unshift(entry);
+            localStorage.setItem('idhEntries', JSON.stringify(entries));
+            updateTable();
+            e.target.reset();
+        }
+
+        function updateTable() {
+            const tbody = document.getElementById('dataTableBody');
+            tbody.innerHTML = '';
+
+            entries.slice(0, 10).forEach(entry => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">${entry.date}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${entry.patientId}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${entry.hadIDH ? 'Yes' : 'No'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${entry.morningMeds ? 'Yes' : 'No'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${entry.medications.join(', ')}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${entry.notes}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function exportData() {
+            const headers = ['Date', 'Patient ID', 'IDH', 'Morning Meds', 'Medications', 'Notes'];
+            const csvData = entries.map(entry => [
+                entry.date,
+                entry.patientId,
+                entry.hadIDH ? 'Yes' : 'No',
+                entry.morningMeds ? 'Yes' : 'No',
+                entry.medications.join(';'),
+                entry.notes
+            ]);
+
+            const csv = [headers, ...csvData].map(row => row.join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'idh_tracking.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        document.getElementById('trackingForm').addEventListener('submit', saveEntry);
+        document.getElementById('exportButton').addEventListener('click', exportData);
+
+        // Set today's date as default
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Initial table update
+        updateTable();
+    </script>
+</body>
+</html>
